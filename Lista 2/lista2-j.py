@@ -5,13 +5,13 @@ print("Vamos começar desbloqueando os materiais!")
 qtd_material = int(input())
 ordem_material = 0
 descobertos = 0
-contador = 0
 
-while ordem_material <= qtd_material:
-    contador += 1
-    print(f"Material {contador} de {qtd_material}")
+for i in range (1, qtd_material+1):
+    ordem_material += 1
+    print(f"Material {ordem_material} de {qtd_material}")
     nome_item = str(input())
     tamanho = len(nome_item)
+    letras_faltando = 0
 
     if tamanho <= 5:
         tentativas = 7
@@ -25,41 +25,46 @@ while ordem_material <= qtd_material:
     for caractere in nome_item:
         if caractere == " ":
             forca += " "
-        else: forca += "_"
-    print(forca)
+        else:
+            forca += "_"
+            letras_faltando += 1
+        
+    print(f"Senha mágica: {forca}")
 
-    letras_chutes = ""
+    letras_chutadas = ""
     acertou = False
+    acertou_meterial = False
 
-    while tentativas > 0:
+    while tentativas > 0 or letras_faltando != 0:
         letra = str(input())
         repetida = False
-        letras_faltando = len(forca)
 
-        for letra in letras_chutes:
-            if letra in letras_chutes:
+        for i in letras_chutadas:
+            if i in letras_chutadas:
                 repetida = True
         
         if repetida == True:
-            print("") #nao sei
+            repetida = True
         else:
-            letras_chutes += letra
+            letras_chutadas += letra
             ordem_letra = 0
             posicoes = ""
         
-            for i in range (1, (tamanho)+1):
-                for chute in nome_item:
-                    if letra == chute:
-                        posicoes += str(i)
-                        acertou = True
-                        letras_faltando -=1
+            for i in nome_item:
+                if i == letra:
+                    posicoes += str(i)
+                    acertou = True
+                    letras_faltando -= len(posicoes)
 
-        if acertou == True:
+        if repetida == True:
+            tentativas -= 1
+
+        elif acertou == True or letras_faltando == 0:
             if len(posicoes) > 1:
                 aparicoes = "vezes"
             else: aparicoes = "vez"
             print(f"Acertamos uma letra! Ela aparece um total de {len(posicoes)} {aparicoes} na senha")
-        
+
         else:
             tentativas -= 1
             if tentativas > 0:
@@ -71,3 +76,49 @@ while ordem_material <= qtd_material:
         print(f"Parabéns! Você desbloqueou o material mágico '{nome_item}'!")
     else:
         print(f"Você não conseguiu desbloquear o material. O nome correto era '{nome_item}'.")
+
+print(f"Você desbloqueou {descobertos} de {qtd_material} materiais mágicos!")
+print(f"Os duendes precisam decifrar os códigos perdidos para montar o trenó!")
+print(f"Quantas partes o trenó possui?")
+
+ordem_parte = 1
+qtd_partes = int(input())
+
+for i in range (1, qtd_partes+1):
+    ordem_parte = i
+    sequencia = str(input())+" "
+    numero = ""
+    maior = 0
+    menor = 99999999999
+    tentativas = 2
+    partes_montadas = 0
+
+    for caractere in sequencia:
+        if caractere != " ":
+            numero += caractere
+        else:
+            if int(numero) > maior:
+                maior = int(numero)
+                numero = ""
+            elif int(numero) < menor:
+                menor = int(numero)
+                numero = ""
+
+    resposta = int(maior + menor)
+
+    while tentativas > 0:
+        tentativa = int(input)
+        if tentativa == resposta:
+            print(f"Você decifrou o código da parte {ordem_parte}! O trenó está mais próximo de ficar completo!")
+            partes_montadas += 1
+        elif tentativas > 0:
+            print("Número incorreto! Tente novamente.")
+        else:
+            print(f"Você não conseguiu decifrar o código. O número mágico era {resposta}.")
+
+print(f"Você montou {partes_montadas} de {qtd_partes} partes do trenó!")
+if partes_montadas == qtd_partes:
+    print("Parabéns! O trenó está completo e pronto para voar!")
+elif partes_montadas >= (qtd_partes // 2):
+    print("Bom trabalho! O trenó quase ficou completo!")
+else: print("Parece que o trenó ficou incompleto. Tente novamente na próxima missão!")
