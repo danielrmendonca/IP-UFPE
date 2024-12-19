@@ -11,7 +11,6 @@ for i in range (1, qtd_material+1):
     print(f"Material {ordem_material} de {qtd_material}")
     nome_item = str(input())
     tamanho = len(nome_item)
-    letras_faltando = 0
 
     if tamanho <= 5:
         tentativas = 7
@@ -21,6 +20,7 @@ for i in range (1, qtd_material+1):
         tentativas = 13
     else: tentativas = 16
 
+    letras_faltando = 0
     forca = ""
     for caractere in nome_item:
         if caractere == " ":
@@ -32,34 +32,35 @@ for i in range (1, qtd_material+1):
     print(f"Senha mágica: {forca}")
 
     letras_chutadas = ""
-    acertou = False
+    
+    
     acertou_meterial = False
 
-    while tentativas > 0 or letras_faltando != 0:
+    while tentativas > 0 and letras_faltando > 0:
         letra = str(input())
         repetida = False
+        acertou = False
 
-        for i in letras_chutadas:
-            if i in letras_chutadas:
+        if letra in letras_chutadas:
                 repetida = True
-        
-        if repetida == True:
-            repetida = True
+
         else:
-            letras_chutadas += letra
             ordem_letra = 0
             posicoes = ""
+
+            if letra in nome_item:
+                acertou = True
+                letras_chutadas += letra
+                
+                for i in nome_item:
+                    if i == letra:
+                        posicoes += str(i)
+                        letras_faltando -= len(posicoes)
         
-            for i in nome_item:
-                if i == letra:
-                    posicoes += str(i)
-                    acertou = True
-                    letras_faltando -= len(posicoes)
-
         if repetida == True:
-            tentativas -= 1
+            tentativas -=1 
 
-        elif acertou == True or letras_faltando == 0:
+        elif acertou == True:
             if len(posicoes) > 1:
                 aparicoes = "vezes"
             else: aparicoes = "vez"
@@ -74,6 +75,7 @@ for i in range (1, qtd_material+1):
     
     if letras_faltando == 0:
         print(f"Parabéns! Você desbloqueou o material mágico '{nome_item}'!")
+        descobertos += 1
     else:
         print(f"Você não conseguiu desbloquear o material. O nome correto era '{nome_item}'.")
 
