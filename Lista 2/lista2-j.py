@@ -32,9 +32,6 @@ for i in range (1, qtd_material+1):
     print(f"Senha mágica: {forca}")
 
     letras_chutadas = ""
-    
-    
-    acertou_meterial = False
 
     while tentativas > 0 and letras_faltando > 0:
         letra = str(input())
@@ -46,25 +43,28 @@ for i in range (1, qtd_material+1):
 
         else:
             ordem_letra = 0
-            posicoes = ""
 
             if letra in nome_item:
                 acertou = True
                 letras_chutadas += letra
                 
-                for i in nome_item:
-                    if i == letra:
-                        posicoes += str(i)
-                        letras_faltando -= len(posicoes)
+                contador_letras_palavra = 0
+
+                for l in nome_item:
+                    if l == letra:
+                        contador_letras_palavra += 1
+
+                    
+                letras_faltando -= contador_letras_palavra
         
         if repetida == True:
             tentativas -=1 
 
         elif acertou == True:
-            if len(posicoes) > 1:
+            if contador_letras_palavra > 1:
                 aparicoes = "vezes"
             else: aparicoes = "vez"
-            print(f"Acertamos uma letra! Ela aparece um total de {len(posicoes)} {aparicoes} na senha")
+            print(f"Acertamos uma letra! Ela aparece um total de {contador_letras_palavra} {aparicoes} na senha")
 
         else:
             tentativas -= 1
@@ -85,36 +85,45 @@ print(f"Quantas partes o trenó possui?")
 
 ordem_parte = 1
 qtd_partes = int(input())
+partes_montadas = 0
 
-for i in range (1, qtd_partes+1):
-    ordem_parte = i
-    sequencia = str(input())+" "
+for p in range (1, qtd_partes+1):
+    ordem_parte = p
+    sequencia = input()+" "
     numero = ""
     maior = 0
-    menor = 99999999999
+    menor = 0
+    primeiro_numero = True
     tentativas = 2
-    partes_montadas = 0
+    
 
     for caractere in sequencia:
         if caractere != " ":
             numero += caractere
         else:
-            if int(numero) > maior:
+            if primeiro_numero == True:
                 maior = int(numero)
-                numero = ""
-            elif int(numero) < menor:
                 menor = int(numero)
-                numero = ""
+                primeiro_numero = False
+            else:
+                if int(numero) > maior:
+                    maior = int(numero)
+                if int(numero) < menor:
+                    menor = int(numero)
+            numero = ""
 
     resposta = int(maior + menor)
+    parte_atual = False
 
-    while tentativas > 0:
-        tentativa = int(input)
+    while tentativas > 0 and parte_atual == False:
+        tentativa = int(input())
         if tentativa == resposta:
             print(f"Você decifrou o código da parte {ordem_parte}! O trenó está mais próximo de ficar completo!")
             partes_montadas += 1
+            parte_atual = True
         elif tentativas > 0:
             print("Número incorreto! Tente novamente.")
+            tentativas -= 1
         else:
             print(f"Você não conseguiu decifrar o código. O número mágico era {resposta}.")
 
