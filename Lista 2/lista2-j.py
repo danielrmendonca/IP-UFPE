@@ -59,8 +59,11 @@ for i in range (1, qtd_material+1):
         
         if repetida == True:
             tentativas -=1 
+            if tentativas == 0:
+                print("Infelizmente não conseguimos descobrir a senha.")
 
         elif acertou == True:
+            tentativas -= 1
             if contador_letras_palavra > 1:
                 aparicoes = "vezes"
             else: aparicoes = "vez"
@@ -95,7 +98,7 @@ for p in range (1, qtd_partes+1):
     menor = 0
     primeiro_numero = True
     tentativas = 2
-    
+    print(f"Parte {ordem_parte} de {qtd_partes}")
 
     for caractere in sequencia:
         if caractere != " ":
@@ -112,19 +115,29 @@ for p in range (1, qtd_partes+1):
                     menor = int(numero)
             numero = ""
 
+    print(f"Dica: O menor número é {menor} e o maior número é {maior}.")
+
     resposta = int(maior + menor)
     parte_atual = False
+    break_while = False
 
-    while tentativas > 0 and parte_atual == False:
+    while parte_atual == False and break_while == False:
+        
+        print(f"Descubra o número mágico (soma de {menor} e {maior})")
         tentativa = int(input())
         if tentativa == resposta:
             print(f"Você decifrou o código da parte {ordem_parte}! O trenó está mais próximo de ficar completo!")
             partes_montadas += 1
             parte_atual = True
-        elif tentativas > 0:
+        elif tentativas == 2:
             print("Número incorreto! Tente novamente.")
             tentativas -= 1
-        else:
+        elif tentativas == 1:
+            tentativas -= 1
+            print("Número incorreto! Tente novamente.")
+            break_while = True
+
+    if tentativas == 0:
             print(f"Você não conseguiu decifrar o código. O número mágico era {resposta}.")
 
 print(f"Você montou {partes_montadas} de {qtd_partes} partes do trenó!")
