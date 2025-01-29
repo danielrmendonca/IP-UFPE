@@ -1,7 +1,7 @@
 alunos = input()
-fila = alunos.split("-")
-nomes = fila
-trocas = [0] * len(fila)
+fila = alunos.split("-") #lista com os alunos na fila
+nomes = fila.copy() #fila sem alterações
+trocas = [0] * len(nomes)
 
 while True:
     entrada = input()
@@ -18,24 +18,23 @@ while True:
 
             indice_1 = fila.index(nome_1)
             indice_2 = fila.index(nome_2)
-
-            trocas[indice_1] += 1
-            trocas[indice_2] += 1
-
             fila[indice_1], fila[indice_2] = fila[indice_2], fila[indice_1]
+
+            indice_para_troca_1 = nomes.index(nome_1)
+            indice_para_troca_2 = nomes.index(nome_2)
+            trocas[indice_para_troca_1] += 1
+            trocas[indice_para_troca_2] += 1
 
         else:
             print("Essa dupla não esta na lista!")
+print("Fila do almoço:")
 
-print("Fila do almoço: ")
-contador = 0
 for i in fila:
-    if contador == 1:
+    indice = nomes.index(i)
+
+    if trocas[indice] == 1:
         tp = "teleporte!"
     else:
         tp = "teleportes!"
 
-    aluno = fila.index(i)
-
-    print(f"{fila[aluno]}: {trocas[contador]} {tp}")
-    contador += 1
+    print(f"{nomes[indice]}: {trocas[indice]} {tp}")
