@@ -97,8 +97,10 @@ while not luta_finalizada:
                         golpes_adaptados.append(golpe)
                         print(f"A roda do Mahoraga girou pela terceira vez! {golpe} não vai funcionar mais")
             if len(golpes_adaptados) == len(lista_golpes_feiticeiro):
-                print("Droga... Eu não tenho mais nada para usar contra o Mahoraga.. Essa luta acabou.")
+                print("Droga... Eu não tenho mais nada pra usar contra o Mahoraga... Essa luta acabou.")
                 luta_finalizada = True
+                vida_feiticeiro = 0
+                break
             turno_feiticeiro = False
     if vida_mahogara <= 0 or vida_feiticeiro <= 0:
         break
@@ -132,9 +134,9 @@ while not luta_finalizada:
                             elif adaptacoes[indice] == 3:
                                 golpes_adaptados.append(ultimo_golpe)
                                 print(f"A roda do Mahoraga girou pela terceira vez! {ultimo_golpe} não vai funcionar mais")
-                                
+                turno_feiticeiro = True           
             if len(golpes_adaptados) == len(lista_golpes_feiticeiro):
-                                print("Droga... Eu não tenho mais nada para usar contra o Mahoraga.. Essa luta acabou.")
+                                print("Droga... Eu não tenho mais nada pra usar contra o Mahoraga... Essa luta acabou.")
                                 luta_finalizada = True
     if vida_feiticeiro <= 0:
         luta_finalizada = True
