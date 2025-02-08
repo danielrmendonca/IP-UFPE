@@ -18,11 +18,12 @@ ataque_mahogara = int(input())
 defesa_mahogara = int(input())
 
 lista_golpes_feiticeiro = input().split(", ")
-lista_golpes_mahogara = ["ataque", "regeneração", "adaptação", "adatapção"]
+lista_golpes_mahogara = ["ataque", "regeneração", "adaptação"]
 
 golpes_usados = []
 golpes_adaptados = []
-golpes_registrados = []
+
+golpes_registrados_adaptacao = []
 adaptacoes = []
 
 if not reversao_feitico:
@@ -50,55 +51,57 @@ while not luta_finalizada:
                 if nome_feiticeiro == "Satoru Gojo":
                     print(f"Como assim o Mahoraga já se adaptou ao infinito de {nome_feiticeiro}!?")
                 else:
-                    print(nome_feiticeiro + " conseguiu!")
+                    print("Nem mesmo a sua adaptação pode derrotar isto!")
                     vida_mahogara = 0
                     luta_finalizada = True
             turno_feiticeiro = False
 
         elif golpe == "black flash":
             print("As faíscas negras ignoram qualquer tipo de defesa! Toma essa Mahoraga!")
-            dano = (ataque_feiticeiro - 25)*2
-            if dano < 0:
-                dano = 0
-            vida_mahogara -= max(0, dano)
+            dano = (ataque_feiticeiro + 25)*2
+            vida_mahogara -= dano
             turno_feiticeiro = False
 
-        elif golpe not in lista_golpes_feiticeiro:
+        elif golpe not in lista_golpes_feiticeiro: #golpe desconhecido
             print("Eu não sei que ideia é essa de tentar usar um golpe que eu não domino!")
             turno_feiticeiro = False
 
-        elif golpe in lista_golpes_feiticeiro:
+        else: #golpe conhecido diferente de reversao, expansão ou black flash
             dano = ((ataque_feiticeiro-defesa_mahogara)+25)
-            if golpe in golpes_adaptados:
-                indice = golpes_registrados.index(golpe)
+            if golpe not in golpes_usados:
+                vida_mahogara -= dano
+                golpes_usados.append(golpe)
+            elif golpe in golpes_adaptados:
+                print("Esse ataque é inútil! Melhor tentar outra coisa.")
+            else: #golpe não adaptado e que já foi usado
+                indice = golpes_registrados_adaptacao.index(golpe)
                 if adaptacoes[indice] == 1:
                     dano = dano/2
                 elif adaptacoes[indice] == 2:
                     dano = dano/4
                 elif adaptacoes[indice] == 3:
-                    dano = dano-dano
-            vida_mahogara -= max(0, dano)
-            golpes_usados.append(golpe)
+                    dano = 0
+                vida_mahogara -= dano
 
-            if golpe != "black flash":
-                if golpe not in golpes_registrados:
-                    golpes_registrados.append(golpe)
-                    adaptacoes.append(1)
+            if golpe not in golpes_adaptados: #golpe não adaptado sendo usado pela primeira vez ou não
+                if golpe not in golpes_registrados_adaptacao:
+                    golpes_registrados_adaptacao.append(golpe) #lista paralelas para contar as adaptações
+                    adaptacoes.append(1) #lista para contar as adaptações
                     print(f"A roda do Mahoraga girou uma vez! {golpe} só vai funcionar mais duas vezes")
-                else:
-                    indice = golpes_registrados.index(golpe)
-                    adaptacoes[indice] += 1
+                else: #segunda vez ou mais do golpe
+                    indice = golpes_registrados_adaptacao.index(golpe)
+                    adaptacoes[indice] += 1 #conta a adaptação
                     if adaptacoes[indice] == 2:
                         print(f"A roda do Mahoraga girou pela segunda vez! {golpe} só vai funcionar mais uma vez")
                     elif adaptacoes[indice] == 3:
                         golpes_adaptados.append(golpe)
                         print(f"A roda do Mahoraga girou pela terceira vez! {golpe} não vai funcionar mais")
-                        if len(golpes_adaptados) == len(lista_golpes_feiticeiro):
-                            print("Droga... Eu não tenho mais nada para usar contra o Mahoraga.. Essa luta acabou.")
-                            luta_finalizada = True
+            if len(golpes_adaptados) == len(lista_golpes_feiticeiro):
+                print("Droga... Eu não tenho mais nada para usar contra o Mahoraga.. Essa luta acabou.")
+                luta_finalizada = True
             turno_feiticeiro = False
-            if vida_mahogara <= 0:
-                break
+    if vida_mahogara <= 0 or vida_feiticeiro <= 0:
+        break
     
     else:
         golpe_mahogara = input()
@@ -108,7 +111,7 @@ while not luta_finalizada:
         else:
             if golpe_mahogara == "ataque":
                 dano = ((ataque_mahogara-defesa_feiticeiro)+25)
-                vida_feiticeiro -= max(0, dano)
+                vida_feiticeiro -= dano
                 turno_feiticeiro = True
 
             elif golpe_mahogara == "regeneração":
@@ -116,27 +119,25 @@ while not luta_finalizada:
                 vida_mahogara += 25
                 turno_feiticeiro = True
 
-            elif golpe_mahogara == "adaptação" or golpe_mahogara == "adatapção":
+            elif golpe_mahogara == "adaptação":
                 if golpes_usados:    
                     ultimo_golpe = golpes_usados[-1]
-                    if ultimo_golpe == "black flash":
+                    if ultimo_golpe == "black flash": #não precisa se preocupar com reversão
                         print("Nem você vai conseguir se adaptar a isso, mahoraga!")
                     else:
-                        if ultimo_golpe not in golpes_registrados:
-                            golpes_registrados.append(ultimo_golpe)
-                            adaptacoes.append(1)
-                            print(f"A roda do Mahoraga girou uma vez! {ultimo_golpe} só vai funcionar mais duas vezes")
-                        else:
-                            indice = golpes_registrados.index(ultimo_golpe)
+                            indice = golpes_registrados_adaptacao.index(ultimo_golpe)
                             adaptacoes[indice] += 1
                             if adaptacoes[indice] == 2:
                                 print(f"A roda do Mahoraga girou pela segunda vez! {ultimo_golpe} só vai funcionar mais uma vez")
                             elif adaptacoes[indice] == 3:
                                 golpes_adaptados.append(ultimo_golpe)
                                 print(f"A roda do Mahoraga girou pela terceira vez! {ultimo_golpe} não vai funcionar mais")
-                                if len(golpes_adaptados) == len(lista_golpes_feiticeiro):
-                                    print("Droga... Eu não tenho mais nada para usar contra o Mahoraga.. Essa luta acabou.")
-                                    luta_finalizada = True
+                                
+            if len(golpes_adaptados) == len(lista_golpes_feiticeiro):
+                                print("Droga... Eu não tenho mais nada para usar contra o Mahoraga.. Essa luta acabou.")
+                                luta_finalizada = True
+    if vida_feiticeiro <= 0:
+        luta_finalizada = True
 if vida_mahogara <= 0:
     print(f"{nome_feiticeiro} conseguiu!")
     if nome_feiticeiro == "Megumi Fushiguro":
@@ -148,7 +149,7 @@ if vida_mahogara <= 0:
     else:
         print("Depois de muito tempo, finalmente o Mahoraga foi exorcizado, mas Fushiguro não participou da luta, logo o ritual foi anulado.")
     luta_finalizada = True
-elif vida_feiticeiro <= 0:
+elif vida_feiticeiro <= 0 or vida_mahogara > 0 and vida_feiticeiro > 0:
     if nome_feiticeiro == "Satoru Gojo":    
         print("Magnífico, Satoru Gojo. Lembrarei de você enquanto eu durar nesta vida.")
     else:
